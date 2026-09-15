@@ -8,7 +8,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 
 const CODE_LENGTH = 6;
 
@@ -16,33 +15,56 @@ type VerificationModalProps = {
   visible: boolean;
   email: string;
   onRequestClose: () => void;
+  /** Verifies the code against Clerk. Return an error message to show, or nothing on success. */
+  onVerify: (code: string) => Promise<string | void>;
+  onResend?: () => void;
 };
 
 export function VerificationModal({
   visible,
   email,
   onRequestClose,
+  onVerify,
+  onResend,
 }: VerificationModalProps) {
-  const router = useRouter();
   const inputRef = useRef<TextInput>(null);
   const [code, setCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!visible) return;
 
     const focusTimeout = setTimeout(() => {
       setCode('');
+      setError(null);
       inputRef.current?.focus();
     }, 250);
     return () => clearTimeout(focusTimeout);
   }, [visible]);
 
   useEffect(() => {
-    if (code.length === CODE_LENGTH) {
-      onRequestClose();
-      router.replace('/');
-    }
-  }, [code, onRequestClose, router]);
+    if (code.length !== CODE_LENGTH) return;
+
+    let cancelled = false;
+
+    (async () => {
+      const errorMessage = await onVerify(code);
+      if (cancelled) return;
+
+      if (errorMessage) {
+        setError(errorMessage);
+        setCode('');
+        inputRef.current?.focus();
+      } else {
+        onRequestClose();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
 
   return (
     <Modal
@@ -86,7 +108,11 @@ export function VerificationModal({
                     <View
                       key={index}
                       className={`h-14 w-11 items-center justify-center rounded-2xl border bg-surface ${
-                        isActive ? 'border-lingua-purple-deep' : 'border-border'
+                        error
+                          ? 'border-error'
+                          : isActive
+                            ? 'border-lingua-purple-deep'
+                            : 'border-border'
                       }`}
                     >
                       <Text className="font-poppins-semibold text-h3 text-text-primary">
@@ -96,6 +122,20 @@ export function VerificationModal({
                   );
                 })}
               </Pressable>
+
+              {error ? (
+                <Text className="mb-2 text-center font-poppins-regular text-body-sm text-error">
+                  {error}
+                </Text>
+              ) : null}
+
+              {onResend && (
+                <Pressable onPress={onResend} className="items-center py-2">
+                  <Text className="font-poppins-medium text-body-sm text-lingua-purple-deep">
+                    Resend code
+                  </Text>
+                </Pressable>
+              )}
 
               <TextInput
                 ref={inputRef}
