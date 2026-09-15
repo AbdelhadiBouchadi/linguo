@@ -1,21 +1,66 @@
-import { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useRouter } from 'expo-router';
+import { useSignUp } from '@clerk/expo';
 import { Ionicons } from '@expo/vector-icons';
+import { Link, useRouter } from 'expo-router';
+import { useState } from 'react';
+import {
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { images } from '@/constants/images';
-import { colors } from '@/theme';
 import { AuthTextField } from '@/components/AuthTextField';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { SocialButton } from '@/components/SocialButton';
 import { VerificationModal } from '@/components/VerificationModal';
+import { images } from '@/constants/images';
+import { useSocialAuth } from '@/hooks/useSocialAuth';
+import { colors } from '@/theme';
 
 export default function SignUp() {
   const router = useRouter();
+  const { signUp, fetchStatus } = useSignUp();
+  const { signInWithStrategy, loadingStrategy } = useSocialAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
+
+  const handleSignUp = async () => {
+    const { error } = await signUp.password({ emailAddress: email, password });
+    if (error) {
+      Alert.alert('Sign up failed', error.longMessage ?? error.message);
+      return;
+    }
+
+    const { error: sendError } = await signUp.verifications.sendEmailCode();
+    if (sendError) {
+      Alert.alert('Sign up failed', sendError.longMessage ?? sendError.message);
+      return;
+    }
+
+    setIsVerifying(true);
+  };
+
+  const handleVerifyCode = async (code: string) => {
+    const { error } = await signUp.verifications.verifyEmailCode({ code });
+    if (error) {
+      return error.longMessage ?? error.message;
+    }
+
+    if (signUp.status === 'complete') {
+      await signUp.finalize({
+        navigate: () => router.replace('/'),
+      });
+    }
+  };
+
+  const handleResendCode = () => {
+    void signUp.verifications.sendEmailCode();
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
@@ -72,7 +117,7 @@ export default function SignUp() {
 
         <AuthTextField
           label="Email"
-          placeholder="alex@gmail.com"
+          placeholder="example@gmail.com"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
@@ -88,7 +133,8 @@ export default function SignUp() {
         <PrimaryButton
           label="Sign Up"
           className="mt-2"
-          onPress={() => setIsVerifying(true)}
+          disabled={fetchStatus === 'fetching'}
+          onPress={handleSignUp}
         />
 
         <View className="my-6 flex-row items-center gap-3">
@@ -103,17 +149,18 @@ export default function SignUp() {
           label="Continue with Google"
           icon="logo-google"
           iconColor="#EA4335"
+          disabled={loadingStrategy !== null}
+          onPress={() => signInWithStrategy('oauth_google')}
         />
         <SocialButton
           label="Continue with Facebook"
           icon="logo-facebook"
           iconColor="#1877F2"
+          disabled={loadingStrategy !== null}
+          onPress={() => signInWithStrategy('oauth_facebook')}
         />
-        <SocialButton
-          label="Continue with Apple"
-          icon="logo-apple"
-          iconColor={colors.textPrimary}
-        />
+
+        <View nativeID="clerk-captcha" />
 
         <View className="mt-auto flex-row items-center justify-center pt-8">
           <Text className="font-poppins-regular text-body-md text-text-secondary">
@@ -133,6 +180,8 @@ export default function SignUp() {
         visible={isVerifying}
         email={email || 'your email'}
         onRequestClose={() => setIsVerifying(false)}
+        onVerify={handleVerifyCode}
+        onResend={handleResendCode}
       />
     </SafeAreaView>
   );
