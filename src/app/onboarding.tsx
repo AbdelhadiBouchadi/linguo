@@ -1,5 +1,6 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
 
 import { images } from '@/constants/images';
 
@@ -58,17 +59,19 @@ export default function Onboarding() {
           </View>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.85}
-          className="mb-6 flex-row items-center justify-center gap-2 rounded-2xl bg-lingua-purple-deep py-4"
-        >
-          <Text className="font-poppins-semibold text-body-lg text-white">
-            Get Started
-          </Text>
-          <Text className="font-poppins-bold text-body-lg text-white">
-            {'›'}
-          </Text>
-        </TouchableOpacity>
+        <Link href="/sign-up" asChild>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            className="mb-6 flex-row items-center justify-center gap-2 rounded-2xl bg-lingua-purple-deep py-4"
+          >
+            <Text className="font-poppins-semibold text-body-lg text-white">
+              Get Started
+            </Text>
+            <Text className="font-poppins-bold text-body-lg text-white">
+              {'›'}
+            </Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </SafeAreaView>
   );
