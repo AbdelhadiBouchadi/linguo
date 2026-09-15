@@ -159,6 +159,13 @@ export default function SignUp() {
           disabled={loadingStrategy !== null}
           onPress={() => signInWithStrategy('oauth_facebook')}
         />
+        <SocialButton
+          label="Continue with Apple"
+          icon="logo-apple"
+          iconColor={colors.textPrimary}
+          disabled={loadingStrategy !== null}
+          onPress={() => signInWithStrategy('oauth_apple')}
+        />
 
         <View nativeID="clerk-captcha" />
 

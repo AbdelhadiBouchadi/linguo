@@ -155,6 +155,13 @@ export default function SignIn() {
             disabled={loadingStrategy !== null}
             onPress={() => signInWithStrategy('oauth_facebook')}
           />
+          <SocialButton
+            label="Continue with Apple"
+            icon="logo-apple"
+            iconColor={colors.textPrimary}
+            disabled={loadingStrategy !== null}
+            onPress={() => signInWithStrategy('oauth_apple')}
+          />
 
           <View className="mt-auto flex-row items-center justify-center pt-8">
             <Text className="font-poppins-regular text-body-md text-text-secondary">
