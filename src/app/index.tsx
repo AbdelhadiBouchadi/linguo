@@ -1,10 +1,11 @@
 import { useAuth, useClerk } from '@clerk/expo';
-import { Redirect } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PrimaryButton } from '@/components/PrimaryButton';
+import { SecondaryButton } from '@/components/SecondaryButton';
 
 export default function Index() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -39,7 +40,11 @@ export default function Index() {
         <Text className="text-center font-poppins-regular text-body-md text-text-secondary">
           You&apos;re signed in.
         </Text>
-        <PrimaryButton
+        <Link href="/language-selection" asChild>
+          <PrimaryButton label="Choose a language" className="w-full" />
+        </Link>
+
+        <SecondaryButton
           label="Sign Out"
           className="w-full"
           disabled={isSigningOut}
