@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Link } from 'expo-router';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SWATCHES = [
@@ -25,6 +26,17 @@ export default function Index() {
             Colors and typography tokens from the Lingua design theme.
           </Text>
         </View>
+
+        <Link href="/onboarding" asChild>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            className="items-center rounded-2xl bg-lingua-purple-deep px-6 py-4"
+          >
+            <Text className="font-poppins-semibold text-body-lg text-white">
+              View Onboarding Screen
+            </Text>
+          </TouchableOpacity>
+        </Link>
 
         <View className="gap-3">
           <Text className="font-poppins-semibold text-h3 text-text-primary">
