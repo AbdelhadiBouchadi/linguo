@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 
-export type SocialStrategy = 'oauth_google' | 'oauth_facebook';
+export type SocialStrategy = 'oauth_google' | 'oauth_facebook' | 'oauth_apple';
 
 export function useSocialAuth() {
   const { startSSOFlow } = useSSO();
