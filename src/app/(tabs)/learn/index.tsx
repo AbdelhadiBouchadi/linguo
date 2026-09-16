@@ -178,7 +178,7 @@ export default function Learn() {
                       lesson_status: status,
                     });
                     router.push({
-                      pathname: '/lesson/[id]',
+                      pathname: '/learn/[id]',
                       params: { id: lesson.id },
                     });
                   }}
