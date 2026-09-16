@@ -7,6 +7,7 @@ export interface Language {
   flagEmoji: string;
   learnersLabel: string;
   description: string;
+  greeting: string;
 }
 
 export type ActivityType = 'video' | 'audio' | 'chat' | 'vocabulary';
@@ -47,6 +48,7 @@ export interface Unit {
   id: string;
   languageCode: LanguageCode;
   order: number;
+  level: string;
   title: string;
   description: string;
 }

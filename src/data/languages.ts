@@ -8,6 +8,7 @@ export const languages: Language[] = [
     flagEmoji: 'https://flagcdn.com/w320/es.png',
     learnersLabel: '28.4M learners',
     description: 'Learn the language spoken across Spain and Latin America.',
+    greeting: 'Hola',
   },
   {
     code: 'fr',
@@ -16,6 +17,7 @@ export const languages: Language[] = [
     flagEmoji: 'https://flagcdn.com/w320/fr.png',
     learnersLabel: '19.4M learners',
     description: 'Learn the language of France, Belgium, and West Africa.',
+    greeting: 'Salut',
   },
   {
     code: 'ja',
@@ -24,6 +26,7 @@ export const languages: Language[] = [
     flagEmoji: 'https://flagcdn.com/w320/jp.png',
     learnersLabel: '12.7M learners',
     description: 'Learn hiragana, katakana, and everyday Japanese phrases.',
+    greeting: 'Konnichiwa',
   },
   {
     code: 'ko',
@@ -32,6 +35,7 @@ export const languages: Language[] = [
     flagEmoji: 'https://flagcdn.com/w320/kr.png',
     learnersLabel: '9.3M learners',
     description: 'Learn hangul and conversational Korean.',
+    greeting: 'Annyeong',
   },
   {
     code: 'de',
@@ -41,6 +45,7 @@ export const languages: Language[] = [
     learnersLabel: '8.1M learners',
     description:
       'Learn the language spoken across Germany, Austria, and Switzerland.',
+    greeting: 'Hallo',
   },
   {
     code: 'zh',
@@ -49,6 +54,7 @@ export const languages: Language[] = [
     flagEmoji: 'https://flagcdn.com/w320/cn.png',
     learnersLabel: '7.4M learners',
     description: 'Learn Mandarin Chinese, from pinyin to everyday phrases.',
+    greeting: 'Nǐ hǎo',
   },
 ];
 
