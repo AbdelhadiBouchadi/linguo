@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { SecondaryButton } from '@/components/SecondaryButton';
 import { getLanguageByCode } from '@/data/languages';
+import { posthog } from '@/lib/posthog';
 import { useLanguageStore } from '@/store/useLanguageStore';
 
 export default function Profile() {
@@ -27,7 +28,11 @@ export default function Profile() {
     setIsSigningOut(true);
     try {
       await signOut();
+      posthog?.capture('sign_out_completed');
     } catch (error) {
+      if (error instanceof Error) {
+        posthog?.captureException(error, { flow: 'sign_out' });
+      }
       console.error('Sign out error:', error);
       Alert.alert('Sign out failed', 'Something went wrong. Please try again.');
       setIsSigningOut(false);
@@ -39,6 +44,9 @@ export default function Profile() {
       await AsyncStorage.clear();
       clearSelectedLanguage();
     } catch (error) {
+      if (error instanceof Error) {
+        posthog?.captureException(error, { flow: 'clear_local_storage' });
+      }
       console.error('Clear storage error:', error);
       Alert.alert('Clear storage failed', 'Something went wrong. Please try again.');
     }

@@ -15,6 +15,7 @@ import { LanguageCard } from '@/components/LanguageCard';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { images } from '@/constants/images';
 import { languages } from '@/data/languages';
+import { posthog } from '@/lib/posthog';
 import { useLanguageStore } from '@/store/useLanguageStore';
 import { colors } from '@/theme';
 import type { Language, LanguageCode } from '@/types/learning';
@@ -112,6 +113,10 @@ export default function LanguageSelection() {
             label="Confirm"
             onPress={() => {
               setSelectedLanguage(selectedCode);
+              posthog?.capture('language_selected', {
+                language_code: selectedCode,
+                changed_existing_selection: storedLanguage !== null,
+              });
               router.replace('/');
             }}
           />

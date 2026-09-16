@@ -20,6 +20,7 @@ import { SocialButton } from '@/components/SocialButton';
 import { VerificationModal } from '@/components/VerificationModal';
 import { images } from '@/constants/images';
 import { useSocialAuth } from '@/hooks/useSocialAuth';
+import { posthog } from '@/lib/posthog';
 import { colors } from '@/theme';
 
 export default function SignIn() {
@@ -49,6 +50,9 @@ export default function SignIn() {
     if (signIn.status === 'complete') {
       await signIn.finalize({
         navigate: () => router.replace('/'),
+      });
+      posthog?.capture('sign_in_completed', {
+        auth_method: 'email_code',
       });
     }
   };

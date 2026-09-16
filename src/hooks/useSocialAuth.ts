@@ -3,6 +3,8 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 
+import { posthog } from '@/lib/posthog';
+
 export type SocialStrategy = 'oauth_google' | 'oauth_facebook' | 'oauth_apple';
 
 export function useSocialAuth() {
@@ -18,9 +20,15 @@ export function useSocialAuth() {
       try {
         const { createdSessionId } = await startSSOFlow({ strategy });
         if (createdSessionId) {
+          posthog?.capture('social_auth_completed', {
+            auth_provider: strategy.replace('oauth_', ''),
+          });
           router.replace('/');
         }
       } catch (error) {
+        if (error instanceof Error) {
+          posthog?.captureException(error, { flow: 'social_auth' });
+        }
         console.error('Social auth error:', error);
         Alert.alert(
           'Sign in failed',

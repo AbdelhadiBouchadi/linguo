@@ -9,6 +9,7 @@ import { images } from '@/constants/images';
 import { getLanguageByCode } from '@/data/languages';
 import { getLessonsByLanguage } from '@/data/lessons';
 import { getUnitById } from '@/data/units';
+import { posthog } from '@/lib/posthog';
 import { useLanguageStore } from '@/store/useLanguageStore';
 import { useProgressStore } from '@/store/useProgressStore';
 import { colors } from '@/theme';
@@ -150,7 +151,14 @@ export default function Home() {
               </Text>
               <TouchableOpacity
                 activeOpacity={0.85}
-                onPress={() => router.push('/(tabs)/learn')}
+                onPress={() => {
+                  posthog?.capture('continue_learning_selected', {
+                    language_code: selectedLanguage,
+                    lesson_id: currentLesson.id,
+                    completed_lesson_count: completedLessonIds.length,
+                  });
+                  router.push('/(tabs)/learn');
+                }}
                 className="mt-4 self-start rounded-full bg-white px-6 py-2.5"
               >
                 <Text className="font-poppins-semibold text-body-md text-lingua-purple-deep">
@@ -221,7 +229,13 @@ export default function Home() {
         {/* Next up */}
         <TouchableOpacity
           activeOpacity={0.85}
-          onPress={() => router.push('/(tabs)/ai-teacher')}
+          onPress={() => {
+            posthog?.capture('ai_teacher_selected', {
+              language_code: selectedLanguage,
+              source: 'home_next_up',
+            });
+            router.push('/(tabs)/ai-teacher');
+          }}
           className="mt-2 flex-row items-center justify-between rounded-3xl bg-[#EAF3DD] p-4"
         >
           <View className="flex-1">
