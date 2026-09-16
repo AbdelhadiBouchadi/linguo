@@ -8,6 +8,7 @@ type ProgressState = {
   xp: number;
   dailyGoalXp: number;
   streak: number;
+  lastCompletionDate: string | null;
   completedLessonIds: string[];
   hasHydrated: boolean;
   completeLesson: (lessonId: string, xpReward: number) => void;
@@ -19,13 +20,28 @@ export const useProgressStore = create<ProgressState>()(
       xp: 0,
       dailyGoalXp: DAILY_GOAL_XP,
       streak: 0,
+      lastCompletionDate: null,
       completedLessonIds: [],
       hasHydrated: false,
       completeLesson: (lessonId, xpReward) => {
-        if (get().completedLessonIds.includes(lessonId)) return;
         set((state) => ({
-          xp: state.xp + xpReward,
-          completedLessonIds: [...state.completedLessonIds, lessonId],
+          ...(state.completedLessonIds.includes(lessonId)
+            ? state
+            : {
+                xp: state.xp + xpReward,
+                streak:
+                  state.lastCompletionDate ===
+                  new Date().toISOString().slice(0, 10)
+                    ? state.streak
+                    : state.lastCompletionDate ===
+                        new Date(Date.now() - 86400000)
+                          .toISOString()
+                          .slice(0, 10)
+                      ? state.streak + 1
+                      : 1,
+                lastCompletionDate: new Date().toISOString().slice(0, 10),
+                completedLessonIds: [...state.completedLessonIds, lessonId],
+              }),
         }));
       },
     }),

@@ -92,16 +92,13 @@ export default function Home() {
                 {streak}
               </Text>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className="h-9 w-9 items-center justify-center rounded-full bg-surface"
-            >
+            <View className="h-9 w-9 items-center justify-center rounded-full bg-surface">
               <Ionicons
                 name="notifications-outline"
                 size={18}
                 color={colors.textPrimary}
               />
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
 
