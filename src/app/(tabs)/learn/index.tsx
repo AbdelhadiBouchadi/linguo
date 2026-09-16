@@ -67,6 +67,8 @@ export default function Learn() {
               router.canGoBack() ? router.back() : router.push('/(tabs)')
             }
             hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
             className="h-9 w-9 items-center justify-center"
           >
             <Ionicons
@@ -94,6 +96,11 @@ export default function Learn() {
             activeOpacity={0.7}
             onPress={() => setIsSaved((prev) => !prev)}
             hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isSaved ? 'Remove lesson from saved' : 'Save lesson'
+            }
+            accessibilityState={{ selected: isSaved }}
             className="h-9 w-9 items-center justify-center"
           >
             <Ionicons
@@ -122,7 +129,9 @@ export default function Learn() {
             className={`flex-1 items-center rounded-full py-2.5 ${
               activeTab === 'lessons' ? 'bg-white' : ''
             }`}
-            style={activeTab === 'lessons' ? styles.activePillShadow : undefined}
+            style={
+              activeTab === 'lessons' ? styles.activePillShadow : undefined
+            }
           >
             <Text
               className={`font-poppins-semibold text-body-md ${
@@ -140,7 +149,9 @@ export default function Learn() {
             className={`flex-1 items-center rounded-full py-2.5 ${
               activeTab === 'practice' ? 'bg-white' : ''
             }`}
-            style={activeTab === 'practice' ? styles.activePillShadow : undefined}
+            style={
+              activeTab === 'practice' ? styles.activePillShadow : undefined
+            }
           >
             <Text
               className={`font-poppins-semibold text-body-md ${
@@ -178,7 +189,7 @@ export default function Learn() {
                       lesson_status: status,
                     });
                     router.push({
-                      pathname: '/lesson/[id]',
+                      pathname: '/learn/[id]',
                       params: { id: lesson.id },
                     });
                   }}
