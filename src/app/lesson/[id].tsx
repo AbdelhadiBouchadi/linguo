@@ -48,7 +48,9 @@ export default function LessonDetail() {
         <View className="flex-row items-center px-5 pt-2">
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => router.back()}
+            onPress={() =>
+              router.canGoBack() ? router.back() : router.replace('/(tabs)')
+            }
             hitSlop={8}
             className="h-9 w-9 items-center justify-center"
           >

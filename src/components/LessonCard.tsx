@@ -19,6 +19,7 @@ export function LessonCard({ lesson, order, status, onPress }: LessonCardProps) 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
+      disabled={status === 'locked'}
       onPress={onPress}
       className={`mb-3 flex-row items-center rounded-2xl border-2 p-4 ${
         isActive
