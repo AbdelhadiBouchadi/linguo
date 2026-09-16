@@ -15,13 +15,20 @@ import { LanguageCard } from '@/components/LanguageCard';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { images } from '@/constants/images';
 import { languages } from '@/data/languages';
+import { useLanguageStore } from '@/store/useLanguageStore';
 import { colors } from '@/theme';
 import type { Language, LanguageCode } from '@/types/learning';
 
 export default function LanguageSelection() {
   const router = useRouter();
+  const storedLanguage = useLanguageStore((state) => state.selectedLanguage);
+  const setSelectedLanguage = useLanguageStore(
+    (state) => state.setSelectedLanguage,
+  );
   const [search, setSearch] = useState('');
-  const [selectedCode, setSelectedCode] = useState<LanguageCode>('es');
+  const [selectedCode, setSelectedCode] = useState<LanguageCode>(
+    storedLanguage ?? 'es',
+  );
 
   const filteredLanguages = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -101,7 +108,13 @@ export default function LanguageSelection() {
         />
 
         <View className="px-6 pt-2">
-          <PrimaryButton label="Confirm" onPress={() => router.back()} />
+          <PrimaryButton
+            label="Confirm"
+            onPress={() => {
+              setSelectedLanguage(selectedCode);
+              router.replace('/');
+            }}
+          />
         </View>
 
         <Image
